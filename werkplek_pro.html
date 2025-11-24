@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Werkplek Designer - Professional Edition</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🏢 Werkplek Designer Professional</h1>
+            <p class="subtitle">Ontwerp je ideale werkplek met drag & drop functionaliteit</p>
+        </header>
+        
+        <div class="instructions">
+            <h3>📖 Instructies:</h3>
+            <ul>
+                <li><strong>Klik</strong> op een item hieronder om het toe te voegen aan je werkplek</li>
+                <li><strong>Sleep</strong> items rond om je ideale indeling te maken</li>
+                <li><strong>Rechtermuisklik</strong> op een item om het te bewerken</li>
+                <li><strong>Dubbelklik</strong> om een item te verwijderen</li>
+            </ul>
+        </div>
+
+        <div class="toolbar">
+            <h3>🛋️ Meubels & Accessoires</h3>
+            <div class="item-palette">
+                <div class="palette-item" data-type="bureau">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Bureau</span>
+                </div>
+                <div class="palette-item" data-type="stoel">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Stoel</span>
+                </div>
+                <div class="palette-item" data-type="monitor">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Monitor</span>
+                </div>
+                <div class="palette-item" data-type="plant">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Plant</span>
+                </div>
+                <div class="palette-item" data-type="lamp">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Lamp</span>
+                </div>
+                <div class="palette-item" data-type="kast">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Kast</span>
+                </div>
+              
+                <div class="palette-item" data-type="koffie">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Koffie</span>
+                </div>
+                <div class="palette-item" data-type="printer">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Printer</span>
+                </div>
+                <div class="palette-item" data-type="boeken">
+                    <span class="item-icon"></span>
+                    <span class="item-label">Boeken</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="workspace-container">
+            <div id="workspace" class="workspace">
+                <!-- Hier komen de versleepbare items -->
+                <div class="grid-overlay"></div>
+            </div>
+        </div>
+
+        <!-- Edit Panel -->
+        <div class="edit-panel" id="editPanel" style="display: none;">
+            <div class="panel-header">
+                <h4>✏️ Item Bewerken</h4>
+                <button class="close-btn" onclick="closeEditPanel()">×</button>
+            </div>
+            <div class="edit-controls">
+                <div class="control-group">
+                    <label for="sizeSlider">Grootte:</label>
+                    <input type="range" id="sizeSlider" min="50" max="200" value="100">
+                    <span id="sizeValue">100%</span>
+                </div>
+                
+                <div class="control-group">
+                    <label for="rotationSlider">Rotatie:</label>
+                    <input type="range" id="rotationSlider" min="0" max="360" value="0">
+                    <span id="rotationValue">0°</span>
+                </div>
+                
+                <div class="control-group">
+                    <label for="itemText">Tekst:</label>
+                    <input type="text" id="itemText" placeholder="Eigen naam...">
+                </div>
+                
+                <div class="control-group">
+                    <label for="colorFilter">Filter:</label>
+                    <select id="colorFilter">
+                        <option value="none">Normaal</option>
+                        <option value="sepia(1)">Vintage</option>
+                        <option value="hue-rotate(180deg)">Blauw</option>
+                        <option value="hue-rotate(90deg)">Groen</option>
+                        <option value="hue-rotate(-90deg)">Roze</option>
+                        <option value="grayscale(1)">Zwart-wit</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="newPhotoUrl">🔄 Nieuwe Foto:</label>
+                    <input type="url" id="newPhotoUrl" placeholder="Plak nieuwe foto URL..." onchange="updateItemPhoto()">
+                    <button class="btn-small btn-info" onclick="clearPhotoUrl()">Reset</button>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="closeEditPanel()">✅ Opslaan</button>
+                    <button class="btn btn-danger" onclick="deleteCurrentItem()">🗑️ Verwijderen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <!-- Photo Creator Modal -->
+        <div class="photo-modal" id="photoModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📸 Eigen Item met Foto Maken</h3>
+                    <button class="close-btn" onclick="closePhotoModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="photo-form">
+                        <div class="form-group">
+                            <label for="itemName">📝 Item Naam:</label>
+                            <input type="text" id="itemName" placeholder="Bijv: Mijn Bureau, Favoriete Stoel..." maxlength="20">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="photoUrl">🔗 Foto URL:</label>
+                            <div class="url-input-group">
+                                <input type="url" id="photoUrl" placeholder="https://images.unsplash.com/photo-..." onchange="previewPhoto()">
+                                <button type="button" class="btn-small btn-info" onclick="testPhotoUrl()" style="margin-left: 10px;">🧪 Test URL</button>
+                            </div>
+                            <small class="help-text">Plak hier een link naar een afbeelding van internet</small>
+                        </div>
+                        
+                        <div class="form-group size-controls">
+                            <div class="size-input">
+                                <label for="itemWidth">📏 Breedte:</label>
+                                <input type="number" id="itemWidth" value="100" min="40" max="200">
+                                <span>px</span>
+                            </div>
+                            <div class="size-input">
+                                <label for="itemHeight">📐 Hoogte:</label>
+                                <input type="number" id="itemHeight" value="100" min="40" max="200">
+                                <span>px</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>🎨 Backup Kleur (als foto niet werkt):</label>
+                            <div class="color-picker">
+                                <input type="color" id="backupColor" value="#3498db">
+                                <span id="colorPreview">#3498db</span>
+                            </div>
+                        </div>
+                        
+                        <div class="photo-preview" id="photoPreview">
+                            <div class="preview-placeholder">
+                                <span>📷</span>
+                                <p>Foto preview verschijnt hier</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-help">
+                        <h4>💡 Hoe vind je foto URL's?</h4>
+                        <ul>
+                            <li><strong>Unsplash:</strong> Ga naar unsplash.com, klik rechts op foto → "Kopieer afbeelding adres"</li>
+                            <li><strong>Google Images:</strong> Zoek afbeelding → klik rechts → "Kopieer afbeelding adres"</li>
+                            <li><strong>Pixabay:</strong> Klik op foto → rechts klik → "Kopieer afbeelding adres"</li>
+                        </ul>
+                        
+                        <h4>🧪 Test met deze voorbeelden:</h4>
+                        <div class="example-urls">
+                            <button type="button" class="btn-small btn-secondary" onclick="useExampleUrl('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400')">Bureau Voorbeeld</button>
+                            <button type="button" class="btn-small btn-secondary" onclick="useExampleUrl('https://images.unsplash.com/photo-1549497538-303791108f95?w=400')">Stoel Voorbeeld</button>
+                            <button type="button" class="btn-small btn-secondary" onclick="useExampleUrl('https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400')">Plant Voorbeeld</button>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-buttons">
+                        <button class="btn btn-success" onclick="createCustomPhotoItem()">
+                            <span class="btn-icon">✨</span>
+                            Item Maken
+                        </button>
+                        <button class="btn btn-secondary" onclick="closePhotoModal()">
+                            <span class="btn-icon">❌</span>
+                            Annuleren
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-section">
+                <h4>🛠️ Werkplek Beheer</h4>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="openPhotoModal()">
+                        <span class="btn-icon">📸</span>
+                        Eigen Item + Foto
+                    </button>
+                    <button class="btn btn-primary" onclick="addCustomItem()">
+                        <span class="btn-icon">➕</span>
+                        Simpel Item
+                    </button>
+                    <button class="btn btn-warning" onclick="clearWorkspace()">
+                        <span class="btn-icon">🗑️</span>
+                        Alles Wissen
+                    </button>
+                    <button class="btn btn-info" onclick="saveLayout()">
+                        <span class="btn-icon">💾</span>
+                        Opslaan
+                    </button>
+                    <button class="btn btn-success" onclick="printWorkspace()">
+                        <span class="btn-icon">🖨️</span>
+                        Print/PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 Werkplek Designer Professional | Gemaakt door jou! 🎨</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
