@@ -72,6 +72,20 @@
                 <!-- Hier komen de versleepbare items -->
                 <div class="grid-overlay"></div>
             </div>
+            
+            <!-- Cost Summary Panel -->
+            <div class="cost-summary" id="costSummary">
+                <div class="cost-header">
+                    <h4>💰 Kostenoverzicht</h4>
+                </div>
+                <div class="cost-list" id="costList">
+                    <div class="cost-empty">Voeg items toe om kosten te zien</div>
+                </div>
+                <div class="cost-total">
+                    <strong>Totaal:</strong>
+                    <span id="totalCost">€0</span>
+                </div>
+            </div>
         </div>
 
         <!-- Edit Panel -->
@@ -91,6 +105,12 @@
                     <label for="rotationSlider">Rotatie:</label>
                     <input type="range" id="rotationSlider" min="0" max="360" value="0">
                     <span id="rotationValue">0°</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="priceInput">Prijs (€):</label>
+                    <input type="number" id="priceInput" min="0" step="1" value="0" />
+                    <button class="btn btn-success btn-small" style="margin-top:6px" onclick="updateItemPrice()">Prijs Updaten</button>
                 </div>
                 
                 <div class="control-group">
@@ -158,6 +178,10 @@
                                 <input type="number" id="itemHeight" value="100" min="40" max="200">
                                 <span>px</span>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemPrice">💰 Prijs (€):</label>
+                            <input type="number" id="itemPrice" value="0" min="0" step="1">
                         </div>
                         
                         <div class="form-group">
@@ -235,7 +259,7 @@
         </div>
 
         <footer class="footer">
-            <p>&copy; 2025 Werkplek Designer Professional | Gemaakt door jou! 🎨</p>
+            <p>&copy; 2025 Werkplek Designer Professional | Gemaakt door Ehab Al Shaman! 🎨</p>
         </footer>
     </div>
 
